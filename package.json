@@ -1,0 +1,52 @@
+{
+  "name": "figma-backup",
+  "version": "0.1.0",
+  "main": "./lib/index.js",
+  "repository": "git@github.com:mimshins/figma-backup.git",
+  "description": "FigmaBackup is a Node.js CLI to backup Figma files and store them as local .fig files.",
+  "author": "mimshins <mostafa.sh.coderino@gmail.com>",
+  "license": "MIT",
+  "bin": {
+    "figma-backup": "./lib/index.js"
+  },
+  "scripts": {
+    "build-ts": "tsc",
+    "build": "npm run build-ts && npm run lint",
+    "debug": "npm run build && npm run watch-debug",
+    "lint": "tsc --project tsconfig.json --noEmit && eslint \"bin/**/*.{js,ts}\" --config .eslintrc.js --quiet --fix",
+    "serve-debug": "NODE_PATH=lib/ nodemon --inspect lib/index.js",
+    "serve": "NODE_PATH=lib/ NODE_ENV=production node lib/index.js",
+    "start": "npm run serve",
+    "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug\"",
+    "watch-node": "NODE_PATH=lib/ nodemon lib/index.js",
+    "watch-ts": "tsc -w",
+    "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
+    "binadd": "npm install -g .",
+    "bindel": "npm remove -g figma-backup",
+    "binrun": "figma-backup"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "concurrently": "^6.3.0",
+    "eslint": "^8.0.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.2",
+    "husky": ">=6",
+    "lint-staged": ">=10",
+    "nodemon": "^2.0.14",
+    "prettier": "^2.4.1",
+    "ts-node": "^10.3.0",
+    "typescript": "^4.4.4"
+  },
+  "lint-staged": {
+    "*.{js,ts,json}": [
+      "eslint --cache --fix",
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "puppeteer": "^11.0.0",
+    "yargs": "^17.2.1"
+  }
+}

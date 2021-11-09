@@ -1,0 +1,11 @@
+{
+  "bracketSpacing": true,
+  "packageManager": "yarn",
+  "printWidth": 80,
+  "semi": true,
+  "singleQuote": false,
+  "tabWidth": 2,
+  "useEditorConfig": true,
+  "trailingComma": "none",
+  "arrowParens": "avoid"
+}
