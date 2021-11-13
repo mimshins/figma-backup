@@ -46,6 +46,7 @@
     ]
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "puppeteer": "^11.0.0",
     "yargs": "^17.2.1"
   }
