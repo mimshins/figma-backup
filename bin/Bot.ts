@@ -50,7 +50,6 @@ export default class Bot {
 
   private _debug: NonNullable<IBotOptions["debug"]>;
 
-  // 267872-e4ef1832-60c8-4af8-979a-63e96eac2b88
   private _figmaAccessToken: IBotOptions["figmaAccessToken"];
 
   constructor(options: IBotOptions) {
