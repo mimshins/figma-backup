@@ -9,7 +9,7 @@
     "isolatedModules": true,
     "lib": ["ESNext", "DOM"],
     "module": "CommonJS",
-    "target": "ES6",
+    "target": "ES2017",
     "outDir": "lib",
     "sourceMap": true,
     "moduleResolution": "node",
