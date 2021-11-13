@@ -4,7 +4,7 @@ import { log, timer, wait } from ".";
 interface Options {
   interactionDelay: number;
   typingDelay: number;
-  downloadDelay: number;
+  downloadTimeout: number;
 }
 
 const saveLocalCopy = async (
@@ -12,7 +12,7 @@ const saveLocalCopy = async (
   file: { name: string; id: string },
   options: Options
 ) => {
-  const { interactionDelay, typingDelay, downloadDelay } = options;
+  const { interactionDelay, typingDelay, downloadTimeout } = options;
 
   log("\t. Opening up the figma command pallete...");
   await wait(interactionDelay);
@@ -35,7 +35,7 @@ const saveLocalCopy = async (
   _timer.start();
   await page.waitForFunction(
     () => !document.querySelector('[class*="visual_bell--shown"]'),
-    { timeout: downloadDelay }
+    { timeout: downloadTimeout }
   );
   const _endTime = _timer.end();
 

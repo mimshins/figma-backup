@@ -26,7 +26,7 @@ export interface IBotOptions {
   figmaAccessToken: string;
   debug?: boolean;
   interactionDelay?: number;
-  downloadDelay?: number;
+  downloadTimeout?: number;
   typingDelay?: number;
 }
 
@@ -45,7 +45,7 @@ export default class Bot {
   private _authData: IBotOptions["authData"];
   private _projectsIds: IBotOptions["projectsIds"];
   private _interactionDelay: NonNullable<IBotOptions["interactionDelay"]>;
-  private _downloadDelay: NonNullable<IBotOptions["downloadDelay"]>;
+  private _downloadTimeout: NonNullable<IBotOptions["downloadTimeout"]>;
   private _typingDelay: NonNullable<IBotOptions["typingDelay"]>;
 
   private _debug: NonNullable<IBotOptions["debug"]>;
@@ -59,7 +59,7 @@ export default class Bot {
       projectsIds,
       figmaAccessToken,
       debug = false,
-      downloadDelay = 30 * 1000,
+      downloadTimeout = 30 * 1000,
       interactionDelay = 2000,
       typingDelay = 100
     } = options;
@@ -67,7 +67,7 @@ export default class Bot {
     this._authData = authData;
 
     this._interactionDelay = interactionDelay;
-    this._downloadDelay = downloadDelay;
+    this._downloadTimeout = downloadTimeout;
     this._typingDelay = typingDelay;
 
     this._projectsIds = projectsIds;
@@ -173,12 +173,12 @@ export default class Bot {
       await saveLocalCopy(page, file, {
         interactionDelay: this._interactionDelay,
         typingDelay: this._typingDelay,
-        downloadDelay: this._downloadDelay
+        downloadTimeout: this._downloadTimeout
       });
     } catch (e) {
       log(
         `\t. Download aborted | Timeout of ${Math.round(
-          this._downloadDelay / 1000
+          this._downloadTimeout / 1000
         )}s exceeded.`
       );
       await page.close();
