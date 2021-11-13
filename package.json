@@ -26,6 +26,7 @@
     "binrun": "figma-backup"
   },
   "devDependencies": {
+    "@types/yargs": "^17.0.5",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "concurrently": "^6.3.0",
