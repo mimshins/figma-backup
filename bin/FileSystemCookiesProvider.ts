@@ -1,10 +1,11 @@
 import { promises as fs } from "fs";
 import type { Cookies, ICookiesProvider } from "./Bot";
+import { COOKIES_PATH } from "./constants";
 
 export default class FileSystemCookiesProvider implements ICookiesProvider {
   private _path: string;
 
-  constructor(path = "./cookies.json") {
+  constructor(path = COOKIES_PATH) {
     this._path = path;
   }
 

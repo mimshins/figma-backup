@@ -1,8 +1,10 @@
+import fs from "fs";
+import path from "path";
 import puppeteer, { Browser, Page } from "puppeteer";
+import { BACKUP_DIR, COOKIES_PATH, ROOT_DIR } from "./constants";
 import { AuthorizationError, BackupError } from "./errors";
 import FileSystemCookiesProvider from "./FileSystemCookiesProvider";
 import {
-  checkAuth,
   fetchProjectFiles,
   goToFilePage,
   log,
@@ -33,14 +35,21 @@ export interface IBotOptions {
 export type Cookie = puppeteer.Protocol.Network.CookieParam;
 export type Cookies = Cookie[];
 
+export interface SessionData {
+  cookies: Cookies | null;
+  date: Date | null;
+}
+
 export interface ICookiesProvider {
   getCookies: () => Promise<Cookies | null>;
   setCookies: (cookies: Cookies) => Promise<void>;
 }
 
+const SESSION_DATA: SessionData = { cookies: null, date: null };
+
 export default class Bot {
   private _browser: Browser | null = null;
-  private _cookiesProvider: ICookiesProvider | null = null;
+  private _cookiesProvider: ICookiesProvider = new FileSystemCookiesProvider();
 
   private _authData: IBotOptions["authData"];
   private _projectsIds: IBotOptions["projectsIds"];
@@ -105,7 +114,9 @@ export default class Bot {
 
       if (this._cookiesProvider) {
         const cookies = await page.cookies();
+
         log("\t. Caching the cookies...");
+        SESSION_DATA.cookies = cookies;
         await this._cookiesProvider.setCookies(cookies);
       }
     } else if (page.url() === "https://www.figma.com/login") {
@@ -118,26 +129,25 @@ export default class Bot {
     }
   }
 
-  private async _confirmAuthentication(page: Page): Promise<void> {
-    log("> Confirming the authentication...");
+  private async _authenticate(page: Page): Promise<void> {
+    log("> Authenticating the bot...");
 
-    if (!(await checkAuth(page))) {
-      if (!this._cookiesProvider) return this._login(page);
+    await this._login(page);
 
-      try {
-        const cookies = await this._cookiesProvider.getCookies();
-        if (!cookies) throw new Error("No cached cookies available!");
+    try {
+      log("\t. Looking for cached cookies...");
+      const cookies =
+        (await this._cookiesProvider.getCookies()) || SESSION_DATA.cookies;
 
-        log("\t. Restoring the cached cookies...");
-        await page.setCookie(...cookies);
+      if (!cookies) throw new Error("No cached cookies found.");
 
-        log("\t. Waiting for the redirection...");
-        await waitForRedirects(page);
-      } catch (e) {
-        throw new AuthorizationError(e as Error);
-      } finally {
-        if (!(await checkAuth(page))) await this._login(page);
-      }
+      log("\t. Restoring the cached cookies...");
+      await page.setCookie(...cookies);
+
+      log("\t. Waiting for the redirection...");
+      await waitForRedirects(page);
+    } catch (e) {
+      throw new AuthorizationError(e as Error);
     }
   }
 
@@ -164,7 +174,7 @@ export default class Bot {
       // @ts-ignore
       await page._client.send("Page.setDownloadBehavior", {
         behavior: "allow",
-        downloadPath: "./figma-backup-downloads"
+        downloadPath: path.join(BACKUP_DIR, SESSION_DATA.date!.toISOString())
       });
       /* eslint-enable */
 
@@ -200,7 +210,7 @@ export default class Bot {
     page.setDefaultNavigationTimeout(60 * 1000);
 
     try {
-      await this._confirmAuthentication(page);
+      await this._authenticate(page);
 
       for (const projectId of this._projectsIds)
         await this._backupProject(projectId);
@@ -212,9 +222,14 @@ export default class Bot {
 
   public async start(): Promise<void> {
     this._browser = await puppeteer.launch({ headless: !this._debug });
-    this._cookiesProvider = new FileSystemCookiesProvider();
+
+    SESSION_DATA.date = new Date();
 
     const _timer = timer();
+
+    if (!fs.existsSync(ROOT_DIR)) fs.mkdirSync(ROOT_DIR);
+    if (!fs.existsSync(BACKUP_DIR)) fs.mkdirSync(BACKUP_DIR);
+    if (fs.existsSync(COOKIES_PATH)) fs.rmSync(COOKIES_PATH);
 
     log("> Starting the backup task...");
     _timer.start();
@@ -226,7 +241,6 @@ export default class Bot {
     log("> Stopping the bot...");
 
     if (this._browser) await this._browser.close();
-    if (this._cookiesProvider) this._cookiesProvider = null;
     this._browser = null;
   }
 }
