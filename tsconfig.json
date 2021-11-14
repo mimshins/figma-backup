@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": "./bin",
     "allowJs": true,
     "alwaysStrict": true,
     "strictNullChecks": true,
@@ -17,10 +16,9 @@
     "noUnusedLocals": true,
     "noImplicitAny": true,
     "noUnusedParameters": true,
-    "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true
   },
   "exclude": ["node_modules", "lib"],
-  "include": ["bin/**/*.ts", "bin/**/*.tsx"]
+  "include": ["bin/**/*.ts"]
 }
