@@ -19,7 +19,7 @@ yarn global add figma-backup
 
 This will install the node package in your global `node_modules` directory (You can find it via `npm list -g | head -1`).
 
-The backup files will be found in `figma-backup-root` directory. You can find this folder in the directory you ran the installation command. 
+The backup files will be found in `figma-backup-root` directory relative to the working directory which you ran the `figma-backup` command.
 
 ## Usage
 
