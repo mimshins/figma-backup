@@ -105,6 +105,6 @@ dist
 
 # Others
 lib/
-figma-backup-downloads/
+figma-backup-root/
 cookies.json
 *.screenshot.*
