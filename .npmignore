@@ -1,0 +1,10 @@
+node_modules/
+.editorconfig
+.eslintrc
+.eslintrc.*
+.prettierrc
+.prettierrc.*
+tsconfig.json
+yarn.lock
+.husky/
+bin/

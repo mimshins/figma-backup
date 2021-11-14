@@ -11,6 +11,16 @@ _**FigmaBackup**_ is a Node.js CLI to backup Figma files and store them as local
 npm install -g figma-backup
 ```
 
+or install it via [Yarn](https://yarnpkg.com/):
+
+```bash
+yarn global add figma-backup
+```
+
+This will install the node package in your global `node_modules` directory (You can find it via `npm list -g | head -1`).
+
+The backup files will be found in `figma-backup-root` directory. You can find this folder in the directory you ran the installation command. 
+
 ## Usage
 
 ### Basic usage
