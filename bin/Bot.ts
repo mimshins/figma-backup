@@ -5,7 +5,7 @@ import { BACKUP_DIR, COOKIES_PATH, ROOT_DIR } from "./constants";
 import { AuthorizationError, BackupError } from "./errors";
 import FileSystemCookiesProvider from "./FileSystemCookiesProvider";
 import {
-  fetchProjectFiles,
+  fetchProject,
   goToFilePage,
   log,
   parseLoginFormError,
@@ -151,7 +151,10 @@ export default class Bot {
     }
   }
 
-  private async _backupFile(file: { name: string; id: string }): Promise<void> {
+  private async _backupFile(
+    file: { name: string; id: string },
+    projectName: string
+  ): Promise<void> {
     if (!this._browser) return;
 
     const page: Page = await this._browser.newPage();
@@ -174,7 +177,11 @@ export default class Bot {
       // @ts-ignore
       await page._client.send("Page.setDownloadBehavior", {
         behavior: "allow",
-        downloadPath: path.join(BACKUP_DIR, SESSION_DATA.date!.toISOString())
+        downloadPath: path.join(
+          BACKUP_DIR,
+          SESSION_DATA.date!.toISOString(),
+          projectName
+        )
       });
       /* eslint-enable */
 
@@ -196,11 +203,15 @@ export default class Bot {
 
   private async _backupProject(projectId: string): Promise<void> {
     log(`> Fetching the project(${projectId}) files...`);
-    const files = (
-      await fetchProjectFiles(projectId, this._figmaAccessToken)
-    ).map(projectFile => ({ name: projectFile.name, id: projectFile.key }));
+    const project = await fetchProject(projectId, this._figmaAccessToken);
+    const projectName = project.name;
 
-    for (const file of files) await this._backupFile(file);
+    const files = project.files.map(file => ({
+      name: file.name,
+      id: file.key
+    }));
+
+    for (const file of files) await this._backupFile(file, projectName);
   }
 
   private async _backupProjects(): Promise<void> {
