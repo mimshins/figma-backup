@@ -13,7 +13,7 @@ export { default as waitAndNavigate } from "./waitAndNavigate";
 export { default as submitLoginForm } from "./submitLoginForm";
 export { default as waitForRedirects } from "./waitForRedirects";
 export { default as fetchTeamProjects } from "./fetchTeamProjects";
-export { default as fetchProjectFiles } from "./fetchProjectFiles";
+export { default as fetchProject } from "./fetchProject";
 export { default as findElementHandle } from "./findElementHandle";
 export { default as parseLoginFormError } from "./parseLoginFormError";
 export { default as getNextSiblingHandle } from "./getNextSiblingHandle";

@@ -18,10 +18,10 @@ interface ResponseError {
   message: string;
 }
 
-const fetchProjectFiles = async (
+const fetchProject = async (
   projectId: string,
   figmaAccessToken: string
-): Promise<FileData[]> => {
+): Promise<ResponseData> => {
   const response: AxiosResponse<ResponseData | ResponseError> = await axios.get(
     `https://api.figma.com/v1/projects/${projectId}/files`,
     { headers: { "X-Figma-Token": figmaAccessToken } }
@@ -35,7 +35,7 @@ const fetchProjectFiles = async (
     );
   }
 
-  return (<ResponseData>response.data).files;
+  return <ResponseData>response.data;
 };
 
-export default fetchProjectFiles;
+export default fetchProject;
