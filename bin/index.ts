@@ -32,22 +32,25 @@ void yargs
           type: "boolean",
           default: false,
           describe:
-            "Opt-in `debug` argument if you want to run the bot in chromium client."
+            "Opt-in `debug` argument if you want to let the bot to open a local chromium window on your client."
         })
         .option("download-timeout", {
           type: "number",
           default: 30000,
-          describe: "The file download timeout (in miliseconds)."
+          describe:
+            "This number indicates the maximum amount of time the bot has to wait for a file to be downloaded. (in miliseconds)."
         })
         .option("interaction-delay", {
           type: "number",
           default: 2000,
-          describe: "The bot's interaction delay (in miliseconds)."
+          describe:
+            "This number indicates the delay between interactions. (in miliseconds)."
         })
         .option("typing-delay", {
           type: "number",
           default: 100,
-          describe: "The bot's typing delay (in miliseconds)."
+          describe:
+            "This number indicates the delay to type a new character. (in miliseconds)."
         })
         .demandOption("e", "Argument `-e | --figma-email` is required.")
         .demandOption("p", "Argument `-p | --figma-password` is required.")
@@ -87,4 +90,4 @@ void yargs
   )
   .help()
   .strict()
-  .version("0.7.0").argv;
+  .version("1.0.0").argv;
