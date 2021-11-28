@@ -1,3 +1,5 @@
+import chalk from "chalk";
+import clui from "clui";
 import fs from "fs";
 import path from "path";
 import puppeteer, { Browser, Page } from "puppeteer";
@@ -16,6 +18,8 @@ import {
   waitAndNavigate,
   waitForRedirects
 } from "./utils";
+
+const { Spinner } = clui;
 
 export interface IAuthData {
   email: string;
@@ -85,19 +89,24 @@ export default class Bot {
   }
 
   private async _login(page: Page): Promise<void> {
-    log("\t. Navigating to the login page...");
+    let spinner = new Spinner("\t. Navigating to the login page...");
+
+    spinner.start();
     await waitAndNavigate(page, page.goto("https://www.figma.com/login"));
+    spinner.stop();
 
     const checkRecent = () =>
       page.url().includes("https://www.figma.com/files/recent");
 
     if (checkRecent()) {
-      log("\t. Bot is already logged in.");
+      log(chalk.red("\t.") + chalk.bold(` Bot is already logged in.`));
       return;
     }
 
     try {
-      log("\t. Submitting the login form...");
+      spinner = new Spinner("\t. Submitting the login form...");
+
+      spinner.start();
       await waitAndNavigate(
         page,
         submitLoginForm(page, this._authData, {
@@ -105,17 +114,18 @@ export default class Bot {
           typingDelay: this._typingDelay
         })
       );
+      spinner.stop();
     } catch (e) {
       throw new AuthorizationError(e as Error);
     }
 
     if (checkRecent()) {
-      log("\t. Bot successfully logged in.");
+      log(chalk.red("\t.") + chalk.bold(` Bot successfully logged in.`));
 
       if (this._cookiesProvider) {
         const cookies = await page.cookies();
 
-        log("\t. Caching the cookies...");
+        log(chalk.red("\t.") + chalk.bold(` Caching the cookies...`));
         SESSION_DATA.cookies = cookies;
         await this._cookiesProvider.setCookies(cookies);
       }
@@ -130,22 +140,24 @@ export default class Bot {
   }
 
   private async _authenticate(page: Page): Promise<void> {
-    log("> Authenticating the bot...");
+    log(chalk.red(">") + chalk.bold(` Authenticating the bot...`));
 
     await this._login(page);
 
     try {
-      log("\t. Looking for cached cookies...");
+      log(chalk.red("\t.") + chalk.bold(` Looking for cached cookies...`));
       const cookies =
         (await this._cookiesProvider.getCookies()) || SESSION_DATA.cookies;
 
       if (!cookies) throw new Error("No cached cookies found.");
 
-      log("\t. Restoring the cached cookies...");
+      log(chalk.red("\t.") + chalk.bold(` Restoring the cached cookies...`));
       await page.setCookie(...cookies);
 
-      log("\t. Waiting for the redirection...");
+      const spinner = new Spinner("\t. Waiting for the redirection...");
+      spinner.start();
       await waitForRedirects(page);
+      spinner.stop();
     } catch (e) {
       throw new AuthorizationError(e as Error);
     }
@@ -160,51 +172,57 @@ export default class Bot {
     const page: Page = await this._browser.newPage();
     page.setDefaultNavigationTimeout(60 * 1000);
 
-    log(`> Backuping the file(${file.name})...`);
+    let spinner = new Spinner(`\t. Navigating to the file(${file.name})...`);
 
-    try {
-      log(`\t. Navigating to the file(${file.name})...`);
-      await waitAndNavigate(page, goToFilePage(page, file.id));
+    log(chalk.red(">") + chalk.bold(` Backuping the file(${file.name})...`));
 
-      await wait(this._interactionDelay);
-      await page.waitForFunction(
-        () => !document.querySelector('[class*="progress_bar--outer"]')
-      );
+    spinner.start();
+    await waitAndNavigate(page, goToFilePage(page, file.id));
+    spinner.stop();
 
-      log(`\t. Setting the download behaviour...`);
-      await wait(this._interactionDelay);
-      /* eslint-disable */
-      // @ts-ignore
-      await page._client.send("Page.setDownloadBehavior", {
-        behavior: "allow",
-        downloadPath: path.join(
-          BACKUP_DIR,
-          SESSION_DATA.date!.toISOString(),
-          projectName
-        )
-      });
-      /* eslint-enable */
+    spinner = new Spinner("\t. Waiting for the page to be loaded...");
 
-      log(`\t. Saving a local copy of the file(${file.name})...`);
-      await saveLocalCopy(page, file, {
-        interactionDelay: this._interactionDelay,
-        typingDelay: this._typingDelay,
-        downloadTimeout: this._downloadTimeout
-      });
-    } catch (e) {
-      log(
-        `\t. Download aborted | Timeout of ${Math.round(
-          this._downloadTimeout / 1000
-        )}s exceeded.`
-      );
-      await page.close();
-    }
+    spinner.start();
+    await wait(this._interactionDelay);
+    await page.waitForFunction(
+      () => !document.querySelector('[class*="progress_bar--outer"]')
+    );
+    spinner.stop();
+
+    log(chalk.red("\t.") + chalk.bold(` Setting the download behaviour...`));
+    await wait(this._interactionDelay);
+    /* eslint-disable */
+    // @ts-ignore
+    await page._client.send("Page.setDownloadBehavior", {
+      behavior: "allow",
+      downloadPath: path.join(
+        BACKUP_DIR,
+        SESSION_DATA.date!.toISOString(),
+        projectName
+      )
+    });
+    /* eslint-enable */
+
+    log(
+      chalk.red("\t.") +
+        chalk.bold(` Saving a local copy of the file(${file.name})...`)
+    );
+    await saveLocalCopy(page, file, {
+      interactionDelay: this._interactionDelay,
+      typingDelay: this._typingDelay,
+      downloadTimeout: this._downloadTimeout
+    });
   }
 
   private async _backupProject(projectId: string): Promise<void> {
-    log(`> Fetching the project(${projectId}) files...`);
+    const spinner = new Spinner(
+      `> Fetching the project(${projectId}) files...`
+    );
+
+    spinner.start();
     const project = await fetchProject(projectId, this._figmaAccessToken);
     const projectName = project.name;
+    spinner.stop();
 
     const files = project.files.map(file => ({
       name: file.name,
@@ -242,14 +260,14 @@ export default class Bot {
     if (!fs.existsSync(BACKUP_DIR)) fs.mkdirSync(BACKUP_DIR);
     if (fs.existsSync(COOKIES_PATH)) fs.rmSync(COOKIES_PATH);
 
-    log("> Starting the backup task...");
+    log(chalk.red(">") + chalk.bold(" Starting the backup task..."));
     _timer.start();
     await this._backupProjects();
-    log(`Backup task finished! (time elapsed: ${_timer.end()}s)`);
+    log(chalk.red(`Backup task finished! (time elapsed: ${_timer.end()}s)`));
   }
 
   public async stop(): Promise<void> {
-    log("> Stopping the bot...");
+    log(chalk.red(">") + chalk.bold(" Stopping the bot..."));
 
     if (this._browser) await this._browser.close();
     this._browser = null;

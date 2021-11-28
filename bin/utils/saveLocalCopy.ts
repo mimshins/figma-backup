@@ -1,5 +1,9 @@
+import clui from "clui";
 import { Page } from "puppeteer";
-import { log, timer, wait } from ".";
+import { log, wait } from ".";
+import chalk from "chalk";
+
+const { Spinner } = clui;
 
 interface Options {
   interactionDelay: number;
@@ -14,34 +18,47 @@ const saveLocalCopy = async (
 ) => {
   const { interactionDelay, typingDelay, downloadTimeout } = options;
 
-  log("\t. Opening up the figma command pallete...");
+  log(
+    chalk.red("\t.") + chalk.bold(` Opening up the figma command pallete...`)
+  );
   await wait(interactionDelay);
   await page.keyboard.down("Meta");
   await page.keyboard.press("KeyP");
   await page.keyboard.up("Meta");
 
-  log("\t. Typing down the download command...");
+  log(chalk.red("\t.") + chalk.bold(` Typing down the download command...`));
   await wait(interactionDelay);
   await page.keyboard.type("save local copy", { delay: typingDelay });
 
-  log("\t. Selecting the right command via enter...");
+  log(chalk.red("\t.") + chalk.bold(` Execute the download command...`));
   await wait(interactionDelay);
   await page.keyboard.press("Enter");
 
-  log("\t. Waiting for the file to be downloaded...");
-  await wait(interactionDelay);
-  const _timer = timer();
+  const spinner = new Spinner("\t. Waiting for the file to be downloaded...");
 
-  _timer.start();
-  await page.waitForFunction(
-    () => !document.querySelector('[class*="visual_bell--shown"]'),
-    { timeout: downloadTimeout }
-  );
-  const _endTime = _timer.end();
+  try {
+    spinner.start();
 
-  log(
-    `\t. File (${file.name}) successfully downloaded. (duration: ${_endTime}s)`
-  );
+    await wait(interactionDelay);
+    await page.waitForFunction(
+      () => !document.querySelector('[class*="visual_bell--shown"]'),
+      { timeout: downloadTimeout }
+    );
+
+    spinner.stop();
+    log(`\t. File (${file.name}) successfully downloaded.`);
+  } catch {
+    spinner.stop();
+    log(
+      chalk.bold.red(
+        `\tERR. Download aborted | Timeout of ${Math.round(
+          downloadTimeout / 1000
+        )}s exceeded.`
+      )
+    );
+  } finally {
+    await page.close();
+  }
 };
 
 export default saveLocalCopy;
