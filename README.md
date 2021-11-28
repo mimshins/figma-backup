@@ -23,13 +23,19 @@ The backup files will be found in `figma-backup-root` directory relative to the 
 
 ## Usage
 
-### Basic usage
+To use the interactive command-line interface, run:
+
+```bash
+figma-backup-interactive
+```
+
+To use the legacy version, run:
 
 ```bash
 figma-backup -e "<YOUR_EMAIL>" -p "<YOUR_PASSWORD>" -t "<YOUR_ACCESS_TOKEN>" --projects-ids "ID1" "ID2" ... "IDx"
 ```
 
-For more information about the cli options type:
+For more information about the legacy cli options type:
 
 ```bash
 figma-backup --help
