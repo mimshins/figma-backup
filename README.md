@@ -17,9 +17,9 @@ or install it via [Yarn](https://yarnpkg.com/):
 yarn global add figma-backup
 ```
 
-This will install the node package in your global `node_modules` directory (You can find it via `npm list -g | head -1`).
+This will download and install the node package and a recent compatible version of Chromium (~170MB Mac, ~282MB Linux, ~280MB Win) in your global `node_modules` directory (You can find it via `npm list -g | head -1`).
 
-The backup files will be found in `figma-backup-root` directory relative to the working directory which you ran the `figma-backup` command.
+Note: If the installation stopped with the 403 Error (Forbidden), you'll have to use a VPN or Proxy to another region/country in order to access the Chromium source.
 
 ## Usage
 
@@ -40,3 +40,6 @@ For more information about the legacy cli options type:
 ```bash
 figma-backup --help
 ```
+## Output
+
+The backup files will be found in `figma-backup-root` directory relative to the working directory which you ran the `figma-backup` command.
