@@ -57,7 +57,9 @@ const saveLocalCopy = async (
       )
     );
   } finally {
-    await page.close();
+    setTimeout(() => {
+      void page.close();
+    }, interactionDelay * 2);
   }
 };
 
