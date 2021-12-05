@@ -1,11 +1,13 @@
-# Figma Backup Bot
+<div align="center">
+  <h1>Figma Backup Bot</h1>
+  <p>A Node.js CLI to backup Figma files and store them as local `.fig` files.</p>
+  <img src="https://img.shields.io/npm/dt/figma-backup?color=d900ff&labelColor=000000&style=for-the-badge" />
+  <img src="https://img.shields.io/github/license/mimshins/figma-backup?color=d900ff&labelColor=000000&style=for-the-badge" />
+  <img src="https://img.shields.io/npm/v/figma-backup?color=d900ff&labelColor=000000&style=for-the-badge" />
+  <img src="https://img.shields.io/twitter/follow/mimshins?color=d900ff&labelColor=000000&logo=twitter&style=for-the-badge" />
+</div>
 
-![](https://img.shields.io/npm/dt/figma-backup?color=d900ff&labelColor=000000&style=for-the-badge)
-![](https://img.shields.io/github/license/mimshins/figma-backup?color=d900ff&labelColor=000000&style=for-the-badge)
-![](https://img.shields.io/npm/v/figma-backup?color=d900ff&labelColor=000000&style=for-the-badge)
-![](https://img.shields.io/twitter/follow/mimshins?color=d900ff&labelColor=000000&logo=twitter&style=for-the-badge)
-
-_**FigmaBackup**_ is a Node.js CLI to backup Figma files and store them as local `.fig` files.
+<hr />
 
 ## Installation
 
