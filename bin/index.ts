@@ -90,4 +90,4 @@ void yargs
   )
   .help()
   .strict()
-  .version("1.0.0").argv;
+  .version("1.0.1").argv;

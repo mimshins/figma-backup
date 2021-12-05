@@ -23,7 +23,7 @@ const displayTitle = () => {
 
   const title = figlet.textSync("FIGMA.\nBACKUP");
   const version = figlet.textSync(
-    " > figma-backup v1.0.0 - INTERACTIVE INTERFACE",
+    " > figma-backup v1.0.1 - INTERACTIVE INTERFACE",
     { font: "Term" }
   );
 
