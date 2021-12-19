@@ -19,7 +19,90 @@ yarn global add figma-backup
 
 This will download and install the node package and a recent compatible version of Chromium (~170MB Mac, ~282MB Linux, ~280MB Win) in your global `node_modules` directory (You can find it via `npm list -g | head -1`).
 
-Note: If the installation stopped with the 403 Error (Forbidden), you'll have to use a VPN or Proxy to another region/country in order to access the Chromium source.
+---
+
+**Note:** If the installation stopped with the 403 Error (Forbidden), you'll have to use a VPN or Proxy to another region/country in order to access the Chromium source.
+
+**Note (Linux Machines):** Make sure all the necessary dependencies are installed. You can run `ldd chrome | grep not` on a Linux machine to check which dependencies are missing. The common ones are provided below.
+
+<details>
+<summary>Debian (e.g. Ubuntu) Dependencies</summary>
+
+```
+ca-certificates
+fonts-liberation
+libappindicator3-1
+libasound2
+libatk-bridge2.0-0
+libatk1.0-0
+libc6
+libcairo2
+libcups2
+libdbus-1-3
+libexpat1
+libfontconfig1
+libgbm1
+libgcc1
+libglib2.0-0
+libgtk-3-0
+libnspr4
+libnss3
+libpango-1.0-0
+libpangocairo-1.0-0
+libstdc++6
+libx11-6
+libx11-xcb1
+libxcb1
+libxcomposite1
+libxcursor1
+libxdamage1
+libxext6
+libxfixes3
+libxi6
+libxrandr2
+libxrender1
+libxss1
+libxtst6
+lsb-release
+wget
+xdg-utils
+```
+</details>
+
+<details>
+<summary>CentOS Dependencies</summary>
+
+```
+alsa-lib.x86_64
+atk.x86_64
+cups-libs.x86_64
+gtk3.x86_64
+ipa-gothic-fonts
+libXcomposite.x86_64
+libXcursor.x86_64
+libXdamage.x86_64
+libXext.x86_64
+libXi.x86_64
+libXrandr.x86_64
+libXScrnSaver.x86_64
+libXtst.x86_64
+pango.x86_64
+xorg-x11-fonts-100dpi
+xorg-x11-fonts-75dpi
+xorg-x11-fonts-cyrillic
+xorg-x11-fonts-misc
+xorg-x11-fonts-Type1
+xorg-x11-utils
+```
+
+After installing dependencies you need to update nss library using this command
+
+```bash
+yum update nss -y
+```
+</details>
+
+---
 
 ## Usage
 

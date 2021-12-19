@@ -250,7 +250,14 @@ export default class Bot {
   }
 
   public async start(): Promise<void> {
-    this._browser = await puppeteer.launch({ headless: !this._debug });
+    const isRootUser = process.getuid() === 0;
+    const isWindows = process.platform === "win32";
+
+    this._browser = await puppeteer.launch({
+      headless: !this._debug,
+      args: isRootUser ? ["--no-sandbox"] : undefined,
+      ignoreDefaultArgs: isWindows ? ["--disable-extensions"] : undefined
+    });
 
     SESSION_DATA.date = new Date();
 
