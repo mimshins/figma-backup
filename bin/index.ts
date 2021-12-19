@@ -36,15 +36,15 @@ void yargs
         })
         .option("download-timeout", {
           type: "number",
-          default: 30000,
+          default: 5,
           describe:
-            "This number indicates the maximum amount of time the bot has to wait for a file to be downloaded. (in miliseconds)."
+            "This number indicates the maximum amount of time the bot has to wait for a file to be downloaded. (in minutes)."
         })
         .option("interaction-delay", {
           type: "number",
-          default: 2000,
+          default: 2,
           describe:
-            "This number indicates the delay between interactions. (in miliseconds)."
+            "This number indicates the delay between interactions. (in seconds)."
         })
         .option("typing-delay", {
           type: "number",
@@ -71,10 +71,10 @@ void yargs
       await new Bot({
         authData: { email: authEmail, password: authPassword },
         projectsIds: projectsIds.map(String),
-        debug,
-        downloadTimeout,
+        downloadTimeout: downloadTimeout * 60 * 1000,
+        interactionDelay: interactionDelay * 1000,
         figmaAccessToken: authToken,
-        interactionDelay,
+        debug,
         typingDelay
       }).start();
     }
@@ -90,4 +90,4 @@ void yargs
   )
   .help()
   .strict()
-  .version("1.0.1").argv;
+  .version("1.0.2").argv;
