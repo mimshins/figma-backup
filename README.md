@@ -4,7 +4,7 @@
   <img src="https://img.shields.io/npm/dt/figma-backup?color=d900ff&labelColor=000000&style=for-the-badge" />
   <img src="https://img.shields.io/github/license/mimshins/figma-backup?color=d900ff&labelColor=000000&style=for-the-badge" />
   <img src="https://img.shields.io/npm/v/figma-backup?color=d900ff&labelColor=000000&style=for-the-badge" />
-  <img src="https://img.shields.io/twitter/follow/mimshins?color=d900ff&labelColor=000000&logo=twitter&style=for-the-badge" />
+  <a title="twitter" href="https://twitter.com/mimshins" target="_blank"><img src="https://img.shields.io/twitter/follow/mimshins?color=d900ff&labelColor=000000&logo=twitter&style=for-the-badge" /></a>
 </div>
 
 <hr />
