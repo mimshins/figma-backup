@@ -250,7 +250,7 @@ export default class Bot {
   }
 
   public async start(): Promise<void> {
-    const isRootUser = process.getuid() === 0;
+    const isRootUser = !!(process.getuid?.() === 0);
     const isWindows = process.platform === "win32";
 
     this._browser = await puppeteer.launch({
