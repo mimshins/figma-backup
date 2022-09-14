@@ -30,7 +30,7 @@ This will download and install the node package and a recent compatible version 
 
 **Note:** If the installation stopped with the 403 Error (Forbidden), you'll have to use a VPN or Proxy to another region/country in order to access the Chromium source.
 
-**Note (Linux Machines):** Make sure all the necessary dependencies are installed. You can run `ldd chrome | grep not` on a Linux machine to check which dependencies are missing. The common ones are provided below.
+**Note (Linux Machines):** Make sure all the necessary dependencies are installed. You can go to the `<path_to_node_modules>/node_modules/puppeteer/.local-chromium/linux-******/chrome-linux` and run `ldd chrome | grep not` on a Linux machine to check which dependencies are missing. The common ones are provided below.
 
 <details>
 <summary>Debian (e.g. Ubuntu) Dependencies</summary>
