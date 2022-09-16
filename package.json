@@ -1,6 +1,6 @@
 {
   "name": "figma-backup",
-  "version": "1.0.4",
+  "version": "2.0.0-canary.0",
   "main": "./lib/index.js",
   "repository": "git@github.com:mimshins/figma-backup.git",
   "description": "FigmaBackup is a Node.js CLI to backup Figma files and store them as local .fig files.",
@@ -15,6 +15,9 @@
     "download figma",
     "download .fig files"
   ],
+  "engines": {
+    "node": ">=14.1.0"
+  },
   "bin": {
     "figma-backup": "./lib/index.js",
     "figma-backup-interactive": "./lib/index.interactive.js"
@@ -63,7 +66,7 @@
     "email-validator": "^2.0.4",
     "figlet": "^1.5.2",
     "inquirer": "^8.2.0",
-    "puppeteer": "^11.0.0",
+    "puppeteer": "^17.1.3",
     "yargs": "^17.2.1"
   }
 }
