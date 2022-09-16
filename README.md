@@ -131,6 +131,20 @@ For more information about the noninteractive cli options run:
 ```bash
 figma-backup --help
 ```
+---
+
+> **To get `project_id` from project page's URL:**\
+`https://www.figma.com/files/project/{project_id}/{project_name}`
+
+> **To get `access_token`:**
+> 1. Login to your Figma account.
+> 2. Head to the account settings from the top-left menu inside Figma.
+> 3. Find the personal access tokens section.
+> 4. Click Create new token.
+> 5. A token will be generated. This will be your only chance to copy the token, so make sure you keep a copy of this in a secure place.
+
+---
+
 ## Output
 
 The backup files will be found in `figma-backup-root` directory relative to the working directory which you ran the `figma-backup` command.
@@ -139,9 +153,13 @@ The backup files will be found in `figma-backup-root` directory relative to the 
 ```
 figma-backup-root/
 ├── cookies.json
-└── backups
-    └── [ISOStringifiedDate]
+└── backups/
+    └── [ISOStringifiedDate]/
         //i.e "2022-09-16T18:14:10.708Z"
-        ├── File1.fig
-        └── File2.fig
+        ├── Project1/
+        │   ├── File1.fig
+        │   └── File2.fig
+        └── Project2/
+            ├── File1.fig
+            └── File2.fig    
 ```
