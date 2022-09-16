@@ -1,7 +1,7 @@
-import clui from "clui";
-import { Page } from "puppeteer";
-import { log, wait } from ".";
 import chalk from "chalk";
+import clui from "clui";
+import { KeyInput, Page } from "puppeteer";
+import { log, wait } from ".";
 
 const { Spinner } = clui;
 
@@ -19,22 +19,50 @@ const saveLocalCopy = async (
   const { interactionDelay, typingDelay, downloadTimeout } = options;
 
   log(
-    chalk.red("\t.") + chalk.bold(` Opening up the figma command pallete...`)
+    chalk.red("\t\t.") + chalk.bold(` Opening up the figma command palette...`)
   );
   await wait(interactionDelay);
-  await page.keyboard.down("Meta");
-  await page.keyboard.press("KeyP");
-  await page.keyboard.up("Meta");
 
-  log(chalk.red("\t.") + chalk.bold(` Typing down the download command...`));
+  const MainKeyInput: KeyInput =
+    process.platform === "darwin" ? "Meta" : "Control";
+
+  await page.keyboard.down(MainKeyInput);
+  await page.keyboard.press("KeyP");
+  await page.keyboard.up(MainKeyInput);
+
+  try {
+    await wait(interactionDelay);
+    await page.waitForSelector("[class*='quick_actions--search']", {
+      timeout: interactionDelay
+    });
+  } catch {
+    chalk.bold.red("\t\tERR. Couldn't open the figma command palette.");
+
+    await wait(interactionDelay);
+    await page.close();
+  }
+
+  log(chalk.red("\t\t.") + chalk.bold(` Typing down the download command...`));
   await wait(interactionDelay);
   await page.keyboard.type("save local copy", { delay: typingDelay });
 
-  log(chalk.red("\t.") + chalk.bold(` Execute the download command...`));
+  try {
+    await wait(interactionDelay);
+    await page.waitForSelector("[class*='quick_actions--result']", {
+      timeout: interactionDelay
+    });
+  } catch {
+    chalk.bold.red("\t\tERR. Couldn't find the download command.");
+
+    await wait(interactionDelay);
+    await page.close();
+  }
+
+  log(chalk.red("\t\t.") + chalk.bold(` Execute the download command...`));
   await wait(interactionDelay);
   await page.keyboard.press("Enter");
 
-  const spinner = new Spinner("\t. Waiting for the file to be downloaded...");
+  const spinner = new Spinner("\t\t. Waiting for the file to be downloaded...");
 
   try {
     spinner.start();
@@ -46,20 +74,19 @@ const saveLocalCopy = async (
     );
 
     spinner.stop();
-    log(`\t. File (${file.name}) successfully downloaded.`);
+    log(chalk.green.bold(`\t\t. File (${file.name}) successfully downloaded.`));
   } catch {
     spinner.stop();
     log(
       chalk.bold.red(
-        `\tERR. Download aborted | Timeout of ${Math.round(
+        `\t\tERR. Download aborted | Timeout of ${Math.round(
           downloadTimeout / 1000
         )}s exceeded.`
       )
     );
   } finally {
-    setTimeout(() => {
-      void page.close();
-    }, interactionDelay * 2);
+    await wait(2 * interactionDelay);
+    await page.close();
   }
 };
 
