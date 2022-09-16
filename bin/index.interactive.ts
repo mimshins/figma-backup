@@ -6,6 +6,7 @@ import { validate as checkEmailValidity } from "email-validator";
 import figlet from "figlet";
 import inquirer from "inquirer";
 import Bot from "./Bot";
+import { VERSION } from "./constants";
 import { log } from "./utils";
 
 interface Data {
@@ -23,7 +24,7 @@ const displayTitle = () => {
 
   const title = figlet.textSync("FIGMA.\nBACKUP");
   const version = figlet.textSync(
-    " > figma-backup v1.0.3 - INTERACTIVE INTERFACE",
+    ` > figma-backup v${VERSION} - INTERACTIVE INTERFACE`,
     { font: "Term" }
   );
 
