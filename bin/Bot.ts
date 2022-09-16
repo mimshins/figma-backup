@@ -204,7 +204,7 @@ export default class Bot {
     /* eslint-enable */
 
     log(
-      chalk.red("\t.") +
+      chalk.red("\t>") +
         chalk.bold(` Saving a local copy of the file(${file.name})...`)
     );
     await saveLocalCopy(page, file, {
@@ -267,10 +267,13 @@ export default class Bot {
     if (!fs.existsSync(BACKUP_DIR)) fs.mkdirSync(BACKUP_DIR);
     if (fs.existsSync(COOKIES_PATH)) fs.rmSync(COOKIES_PATH);
 
-    log(chalk.red(">") + chalk.bold(" Starting the backup task..."));
+    log(chalk.red.bold(" Starting the backup task..."));
     _timer.start();
     await this._backupProjects();
-    log(chalk.red(`Backup task finished! (time elapsed: ${_timer.end()}s)`));
+    log(
+      chalk.red.bold(`Backup task finished! (time elapsed: ${_timer.end()}s)`)
+    );
+    await this.stop();
   }
 
   public async stop(): Promise<void> {
