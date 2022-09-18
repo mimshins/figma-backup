@@ -3,10 +3,10 @@ import { ElementHandle, Page } from "puppeteer";
 const getNextSiblingHandle = async (
   page: Page,
   elementHandle: ElementHandle
-): Promise<ElementHandle> => {
+): Promise<ElementHandle<Node>> => {
   const nextSiblingHandle = (
     await page.evaluateHandle(
-      (element: HTMLElement) => element.nextElementSibling,
+      element => element.nextElementSibling,
       elementHandle
     )
   ).asElement();

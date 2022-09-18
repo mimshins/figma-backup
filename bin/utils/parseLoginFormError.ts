@@ -10,8 +10,8 @@ const parseLoginFormError = async (page: Page): Promise<null | string> => {
     selector: 'form#auth-view-page > input[name="password"]'
   });
 
-  return await page.evaluate(
-    (emailInput: HTMLElement, passwordInput: HTMLElement) => {
+  return (await page.evaluate(
+    (emailInput, passwordInput) => {
       if (emailInput.className.includes("invalidInput")) return "Invalid email";
       if (passwordInput.className.includes("invalidInput"))
         return "Invalid password";
@@ -19,7 +19,7 @@ const parseLoginFormError = async (page: Page): Promise<null | string> => {
     },
     emailInputHandle,
     passwordInputHandle
-  );
+  )) as string | null;
 };
 
 export default parseLoginFormError;

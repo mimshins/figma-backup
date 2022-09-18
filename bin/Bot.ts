@@ -191,17 +191,17 @@ export default class Bot {
 
     log(chalk.red("\t.") + chalk.bold(` Setting the download behaviour...`));
     await wait(this._interactionDelay);
-    /* eslint-disable */
-    // @ts-ignore
-    await page._client.send("Page.setDownloadBehavior", {
+
+    const client = await page.target().createCDPSession();
+    await client.send("Page.setDownloadBehavior", {
       behavior: "allow",
       downloadPath: path.join(
         BACKUP_DIR,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         SESSION_DATA.date!.toISOString(),
         projectName
       )
     });
-    /* eslint-enable */
 
     log(
       chalk.red("\t>") +

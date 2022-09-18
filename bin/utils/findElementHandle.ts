@@ -23,10 +23,10 @@ const findElementHandle = async (
     const handles = await page.$$(selector || "*");
 
     for (const handle of handles) {
-      const currentElementInnerHTML = await page.evaluate(
-        (element: HTMLElement) => element.innerHTML,
+      const currentElementInnerHTML = (await page.evaluate(
+        element => element.innerHTML,
         handle
-      );
+      )) as string;
 
       if (typeof innerHTML === "string") {
         if (currentElementInnerHTML === innerHTML) {

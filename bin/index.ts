@@ -2,6 +2,7 @@
 
 import * as yargs from "yargs";
 import Bot from "./Bot";
+import { VERSION } from "./constants";
 
 void yargs
   .command(
@@ -90,4 +91,4 @@ void yargs
   )
   .help()
   .strict()
-  .version("1.0.3").argv;
+  .version(VERSION).argv;

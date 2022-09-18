@@ -11,7 +11,8 @@
 
 ## Installation
 
-1- Make sure you have [Node.js](https://nodejs.org) installed on your machine.
+1- Make sure you have [Node.js](https://nodejs.org) installed on your machine.\
+(We follow the latest [maintenance LTS](https://github.com/nodejs/Release#release-schedule) version of Node.)
 
 2- Run the following command on your terminal:
 ```bash
@@ -24,11 +25,11 @@ or install it via [Yarn](https://yarnpkg.com/):
 yarn global add figma-backup
 ```
 
-This will download and install the node package and a recent compatible version of Chromium (~170MB Mac, ~282MB Linux, ~280MB Win) in your global `node_modules` directory (You can find it via `npm list -g | head -1`).
-
----
+It is going to download and install the node package and a recent compatible version of Chromium in your global `node_modules` directory (You can find it via `npm list -g | head -1`).
 
 **Note:** If the installation stopped with the 403 Error (Forbidden), you'll have to use a VPN or Proxy to another region/country in order to access the Chromium source.
+
+---
 
 **Note (Linux Machines):** Make sure all the necessary dependencies are installed. You can go to the `<path_to_node_modules>/node_modules/puppeteer/.local-chromium/linux-******/chrome-linux` and run `ldd chrome | grep not` on a Linux machine to check which dependencies are missing. The common ones are provided below.
 
@@ -119,17 +120,46 @@ To use the interactive command-line interface, run:
 figma-backup-interactive
 ```
 
-To use the legacy version, run:
+To use the noninteractive version, run:
 
 ```bash
 figma-backup -e "<YOUR_EMAIL>" -p "<YOUR_PASSWORD>" -t "<YOUR_ACCESS_TOKEN>" --projects-ids "ID1" "ID2" ... "IDx"
 ```
 
-For more information about the legacy cli options type:
+For more information about the noninteractive cli options run:
 
 ```bash
 figma-backup --help
 ```
+---
+
+> **To get `project_id` from project page's URL:**\
+`https://www.figma.com/files/project/{project_id}/{project_name}`
+
+> **To get `access_token`:**
+> 1. Login to your Figma account.
+> 2. Head to the account settings from the top-left menu inside Figma.
+> 3. Find the personal access tokens section.
+> 4. Click Create new token.
+> 5. A token will be generated. This will be your only chance to copy the token, so make sure you keep a copy of this in a secure place.
+
+---
+
 ## Output
 
 The backup files will be found in `figma-backup-root` directory relative to the working directory which you ran the `figma-backup` command.
+
+### Structure of `figma-backup-root`:
+```
+figma-backup-root/
+├── cookies.json
+└── backups/
+    └── [ISOStringifiedDate]/
+        //i.e "2022-09-16T18:14:10.708Z"
+        ├── Project1/
+        │   ├── File1.fig
+        │   └── File2.fig
+        └── Project2/
+            ├── File1.fig
+            └── File2.fig    
+```
