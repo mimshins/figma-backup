@@ -140,7 +140,7 @@ TROUBLESHOOTING: https://github.com/puppeteer/puppeteer/blob/main/docs/troublesh
 ```
 You can follow [this](https://stackoverflow.com/questions/60304251/unable-to-open-x-display-when-trying-to-run-google-chrome-on-centos-rhel-7-5/61043049#61043049) and set the screen to something like:
 ```bash
-Xvfb -ac :99 -screen 0 1280x1024x16 &
+xvfb -ac :99 -screen 0 1280x1024x16 &
 export DISPLAY=:99
 ```
 </details>
