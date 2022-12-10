@@ -1,6 +1,6 @@
 import path from "path";
 
-export const VERSION = "2.0.0";
+export const VERSION = "2.0.1";
 
 export const ROOT_DIR = "figma-backup-root";
 
