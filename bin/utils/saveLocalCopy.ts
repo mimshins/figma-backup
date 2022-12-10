@@ -1,7 +1,8 @@
 import chalk from "chalk";
 import clui from "clui";
 import { KeyInput, Page } from "puppeteer";
-import { log, wait } from ".";
+import log from "./log";
+import wait from "./wait";
 
 const { Spinner } = clui;
 
@@ -21,7 +22,6 @@ const saveLocalCopy = async (
   log(
     chalk.red("\t\t.") + chalk.bold(` Opening up the figma command palette...`)
   );
-  await wait(interactionDelay);
 
   const MainKeyInput: KeyInput =
     process.platform === "darwin" ? "Meta" : "Control";
@@ -29,9 +29,9 @@ const saveLocalCopy = async (
   await page.keyboard.down(MainKeyInput);
   await page.keyboard.press("KeyP");
   await page.keyboard.up(MainKeyInput);
+  await wait(interactionDelay);
 
   try {
-    await wait(interactionDelay);
     await page.waitForSelector("[class*='quick_actions--search']", {
       timeout: interactionDelay
     });
@@ -43,7 +43,6 @@ const saveLocalCopy = async (
   }
 
   log(chalk.red("\t\t.") + chalk.bold(` Typing down the download command...`));
-  await wait(interactionDelay);
   await page.keyboard.type("save local copy", { delay: typingDelay });
 
   try {
@@ -66,13 +65,7 @@ const saveLocalCopy = async (
 
   try {
     spinner.start();
-
-    await wait(interactionDelay);
-    await page.waitForFunction(
-      () => !document.querySelector('[class*="visual_bell--shown"]'),
-      { timeout: downloadTimeout }
-    );
-
+    await page.waitForNetworkIdle({ timeout: downloadTimeout });
     spinner.stop();
     log(chalk.green.bold(`\t\t. File (${file.name}) successfully downloaded.`));
   } catch {
