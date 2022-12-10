@@ -110,6 +110,42 @@ yum update nss -y
 ```
 </details>
 
+### Docker Container
+You can also use docker container and run the `figma-backup` command in it. 
+<details>
+<summary>Usage
+</summary>
+Building image:
+
+```bash
+docker build -t <image_name> -f Dockerfile .
+```
+Running the container:
+```bash
+docker run --name <container_name> -it <image_name> bash
+```
+**Note:**
+
+If you face the following error:
+```bash
+Error: Failed to launch the browser process!
+[19:19:0914/132053.471715:ERROR:browser_main_loop.cc(1409)] Unable to open X display.
+
+
+TROUBLESHOOTING: https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md
+
+    at onClose (/usr/local/lib/node_modules/figma-backup/node_modules/puppeteer/lib/cjs/puppeteer/node/BrowserRunner.js:203:20)
+    at ChildProcess.<anonymous> (/usr/local/lib/node_modules/figma-backup/node_modules/puppeteer/lib/cjs/puppeteer/node/BrowserRunner.js:194:79)
+    at ChildProcess.emit (node:events:525:35)
+    at ChildProcess._handle.onexit (node:internal/child_process:291:12)
+```
+You can follow [this](https://stackoverflow.com/questions/60304251/unable-to-open-x-display-when-trying-to-run-google-chrome-on-centos-rhel-7-5/61043049#61043049) and set the screen to something like:
+```bash
+Xvfb -ac :99 -screen 0 1280x1024x16 &
+export DISPLAY=:99
+```
+</details>
+
 ---
 
 ## Usage
