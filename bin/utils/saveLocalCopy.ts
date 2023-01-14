@@ -6,7 +6,7 @@ import wait from "./wait";
 
 const { Spinner } = clui;
 
-interface Options {
+interface Init {
   interactionDelay: number;
   typingDelay: number;
   downloadTimeout: number;
@@ -15,9 +15,9 @@ interface Options {
 const saveLocalCopy = async (
   page: Page,
   file: { name: string; id: string },
-  options: Options
+  init: Init
 ) => {
-  const { interactionDelay, typingDelay, downloadTimeout } = options;
+  const { interactionDelay, typingDelay, downloadTimeout } = init;
 
   log(
     chalk.red("\t\t.") + chalk.bold(` Opening up the figma command palette...`)
@@ -29,14 +29,13 @@ const saveLocalCopy = async (
   await page.keyboard.down(MainKeyInput);
   await page.keyboard.press("KeyP");
   await page.keyboard.up(MainKeyInput);
-  await wait(interactionDelay);
 
   try {
     await page.waitForSelector("[class*='quick_actions--search']", {
       timeout: interactionDelay
     });
   } catch {
-    chalk.bold.red("\t\tERR. Couldn't open the figma command palette.");
+    log(chalk.bold.red("\t\tERR. Couldn't open the figma command palette."));
 
     await wait(interactionDelay);
     await page.close();
@@ -46,28 +45,34 @@ const saveLocalCopy = async (
   await page.keyboard.type("save local copy", { delay: typingDelay });
 
   try {
-    await wait(interactionDelay);
     await page.waitForSelector("[class*='quick_actions--result']", {
       timeout: interactionDelay
     });
   } catch {
-    chalk.bold.red("\t\tERR. Couldn't find the download command.");
+    log(chalk.bold.red("\t\tERR. Couldn't find the download command."));
 
     await wait(interactionDelay);
     await page.close();
   }
 
   log(chalk.red("\t\t.") + chalk.bold(` Execute the download command...`));
-  await wait(interactionDelay);
   await page.keyboard.press("Enter");
 
   const spinner = new Spinner("\t\t. Waiting for the file to be downloaded...");
 
   try {
     spinner.start();
-    await page.waitForNetworkIdle({ timeout: downloadTimeout });
+    await page.waitForNetworkIdle({
+      timeout: downloadTimeout,
+      idleTime: 5000 + interactionDelay
+    });
     spinner.stop();
-    log(chalk.green.bold(`\t\t. File (${file.name}) successfully downloaded.`));
+    log(
+      chalk.green.bold(
+        `\t\t. File (${file.name}) successfully downloaded.` +
+          "\n\t\t  (You are seeing this message because the bot has detected network idleness and assumes the download has finished)"
+      )
+    );
   } catch {
     spinner.stop();
     log(

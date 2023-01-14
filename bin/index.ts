@@ -37,7 +37,7 @@ void yargs
         })
         .option("download-timeout", {
           type: "number",
-          default: 5,
+          default: 60,
           describe:
             "This number indicates the maximum amount of time the bot has to wait for a file to be downloaded. (in minutes)."
         })

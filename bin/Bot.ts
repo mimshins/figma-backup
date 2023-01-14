@@ -240,9 +240,8 @@ export default class Bot {
 
       for (const projectId of this._projectsIds)
         await this._backupProject(projectId);
-    } catch (e) {
-      await this.stop();
-      throw new BackupError(e as Error);
+    } catch (err) {
+      throw new BackupError(<Error>err);
     }
   }
 
@@ -250,9 +249,12 @@ export default class Bot {
     const isRootUser = !!(process.getuid?.() === 0);
     const isWindows = process.platform === "win32";
 
+    const ownArgs = ["--disable-dev-shm-usage"];
+    const rootUserArgs = [...ownArgs, "--no-sandbox"];
+
     this._browser = await puppeteer.launch({
       headless: !this._debug,
-      args: isRootUser ? ["--no-sandbox"] : undefined,
+      args: isRootUser ? rootUserArgs : ownArgs,
       ignoreDefaultArgs: isWindows ? ["--disable-extensions"] : undefined
     });
 
@@ -266,17 +268,25 @@ export default class Bot {
 
     log(chalk.red.bold(" Starting the backup task..."));
     _timer.start();
-    await this._backupProjects();
-    log(
-      chalk.red.bold(`Backup task finished! (time elapsed: ${_timer.end()}s)`)
-    );
-    await this.stop();
+    try {
+      await this._backupProjects();
+      log(
+        chalk.red.bold(`Backup task finished! (time elapsed: ${_timer.end()}s)`)
+      );
+    } catch (err) {
+      log(chalk.bold.red(`ERR. ${(<Error>err).message}`));
+    } finally {
+      await this.stop();
+    }
   }
 
   public async stop(): Promise<void> {
     log(chalk.red(">") + chalk.bold(" Stopping the bot..."));
 
-    if (this._browser) await this._browser.close();
-    this._browser = null;
+    try {
+      if (this._browser) await this._browser.close();
+    } finally {
+      this._browser = null;
+    }
   }
 }

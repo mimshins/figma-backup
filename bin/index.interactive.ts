@@ -81,7 +81,7 @@ const askForData = async () => {
         "Enter the download timeout (in minutes):",
         "(This number indicates the maximum amount of time the bot has to wait for a file to be downloaded.)"
       ].join("\n"),
-      default: 5,
+      default: 60,
       type: "number"
     },
     {
