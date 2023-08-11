@@ -14,6 +14,8 @@ const submitLoginForm = async (
 ) => {
   const { interactionDelay, typingDelay } = options;
 
+  await page.bringToFront();
+
   // Focus the email field
   await wait(interactionDelay);
   await page.click('form#auth-view-page > input[name="email"]');
