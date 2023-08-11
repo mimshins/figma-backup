@@ -19,6 +19,8 @@ const saveLocalCopy = async (
 ) => {
   const { interactionDelay, typingDelay, downloadTimeout } = init;
 
+  await page.bringToFront();
+
   log(
     chalk.red("\t\t.") + chalk.bold(` Opening up the figma command palette...`)
   );
