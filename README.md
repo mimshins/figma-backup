@@ -9,6 +9,11 @@
 
 <hr />
 
+**NOTE**: _This repository is no longer supported or updated by me due to constant changes in Figma and lack of time, resource, and contribution to the project.
+If you wish to continue to develop this code yourself, we recommend you fork it. And if you are looking for another solution I recommend [Magicul](https://magicul.io/figma-design-backup)!_
+
+<hr />
+
 ## Installation
 
 1- Make sure you have [Node.js](https://nodejs.org) installed on your machine.\
